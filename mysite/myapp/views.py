@@ -3,7 +3,7 @@ from .models import Food, Consume
 
 # Create your views here.
 def index(request):
-    
+    consumed_food = '' 
     if request.method == "POST":
         food_consumed = request.POST['food_consumed']
         consume = Food.objects.get(name=food_consumed)
@@ -12,6 +12,9 @@ def index(request):
         consume.save()
         foods = Food.objects.all()
         
-    else:    
+    else:   
         foods = Food.objects.all()
-    return render(request, 'myapp/index.html', {'foods': foods})
+        
+    if(request.user != ''):
+            consumed_food = Consume.objects.filter(user=request.user)    
+    return render(request, 'myapp/index.html', {'foods': foods, 'consumed_food': consumed_food})
